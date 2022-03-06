@@ -22,14 +22,16 @@ public class DocFinderPerfTester {
         var start = 1;
         var end = Runtime.getRuntime().availableProcessors() * 2;
 
-        var outputFile = Path.of("results.csv");
+        /*var outputFile = Path.of("results.csv");
         Files.deleteIfExists(outputFile);
         Files.createFile(outputFile);
-        Files.writeString(outputFile, "nThreads,avg,min,max,throughput\n");
+        Files.writeString(outputFile, "nThreads,avg,min,max,throughput\n");*/
 
-        for (int nThreads = start; nThreads <= end; nThreads++) {
+        /*for (int nThreads = start; nThreads <= end; nThreads++) {
             runPerformanceTest(booksDir, nThreads, outputFile);
-        }
+        }*/
+
+        runPerformanceTest(booksDir, end, Path.of("results.csv"));
     }
 
     private static void runPerformanceTest(Path booksDir, int nThreads, Path outputFile) throws IOException {
