@@ -61,12 +61,16 @@ Versuchen Sie, folgende Fragen zu beantworten:
 * Wird die CPU vollständig ausgelastet? Wie ändert sich die CPU-Auslastung, 
   wenn mehr oder weniger Threads für die Parallelisierung des Doc Finders 
   verwendet werden?
+  Nein sie wird nicht vollständig ausgelastet, wird aber besser mit mehr Threads.
 * Wie gross ist der Heap, auf dem die Java-Objekte alloziert werden? Ist die 
   Grösse angemessen? Wie aktiv ist der Garbage Collector?
+  1 GB, könnte aber bis 4 GB anwachsen. Ja ist ausreichend, der GC kommt nie zum Zug.
 * In welchem Zustand befinden sich die Threads grösstenteils? Gibt es 
   Unterschiede zwischen dem _main_-Thread und den Threads für die 
   Parallelisierung (z. B. aus einem Threadpool)? Falls Threads blockiert 
   sind (Zustand _Wait_, _Park_ oder _Monitor_), aus welchem Grund?
+  Die Threads im ThreadPool sind immer "running" während dem Programmablauf. Der main nur auf Park
+  Dies wahrscheinlich, da die meiste Arbeit nicht im main sondern in den Threads vom ThreadPool passiert und deswegen main wenig zu tun hat, die ThreadPool Threads aber umso mehr.
 
 
 ### 3. Profiling
@@ -85,14 +89,18 @@ Lassen Sie den Sampler für einige Sekunden laufen und analysieren Sie dann
 das erstellte Profil. Versuchen Sie folgende Fragen zu beantworten:
 * Welche Teile des Codes sind für den grössten Teil der Antwortzeit
   verantwortlich?
+  Das replaceAll im findInDoc
 * Stellen Sie Unterschiede im Profil fest, wenn Sie die Sampling-Frequenz auf 
   einen sehr grossen oder sehr kleinen Wert ändern?
+  Bei einem kleinen Wert sieht man auch noch Methoden die man sonst nicht gesehen hat.
 * Beinflusst das Sampling die Performance des Doc Finders? Probieren Sie 
   auch hier verschiedene Sampling-Frequenzen aus.
+  Sieht aus als hätte es nicht eine grosse Auswirkung. Mit einer kleineren Sampling Rate war der Throughput sogar eher schlechter.
 * Vergleichen Sie die Sampling-Profile auch mal mit den Profilen, welche der 
   _Profile_-Tab durch Tracing liefert. Wie stark beinflusst das Tracing die 
   Performance des Doc Finders?
-
+  Man sieht andere Methoden, dafür die wirklich grossen Aufrufen nicht mehr...
+  Die Performance vom Programm hat aber auch hier komischerweise nicht wirklich gelitten.
 
 ### 4. Performance-Optimierung
 
@@ -100,10 +108,13 @@ Versuchen Sie aufgrund der Analyse mit VisualVM die Performance des Doc
 Finders zu optimieren. Orientieren Sie sich an folgenden Fragen:
 * Welche Operationen dauern am längsten? Sind diese unbedingt nötig? Kann 
   man den gleichen Effekt auf effizientere Art erreichen?
+  replaceAll geht am längsten. Wahrscheinlich ist das aber gar nicht nötig.
 * Gibt es Operationen, welche unnötigerweise mehrfach gemacht werden? Wie 
   kann man diese Mehrfachberechnungen eliminieren?
+  Beispielsweise könnte man den searchText nur einmal parsen.
 * Gibt es eine Möglichkeit, Resultate zwischenzuspeichern? Unter welchen 
   Annahmen? Kann man ein "bisschen Korrektheit" für Performance opfern?
+  Man könnte beispielsweise einen effizienteren Suchalgorithmus benutzen, jenachdem welchen würde das die Korrektheit auch verkleinern.
 
 Gehen Sie iterativ vor, d. h. versuchen Sie die Performance schrittweise zu 
 verbessern. Wenn Sie eine Verbesserung umgesetzt haben, messen Sie die neue 
@@ -117,3 +128,5 @@ Verwenden Sie dazu die _Snapshot_-Funktion:
 Bereiten Sie für die nächste Lektion eine kleine Zusammenfassung vor mit den 
 wichtigsten Erkenntnissen, kurzen Beschreibungen der vorgenommenen 
 Optimierungen und den entsprechenden Performance-Gewinnen.
+
+Das entfernen vom replaceAll hat einiges an Performance Gewinn gegeben.
