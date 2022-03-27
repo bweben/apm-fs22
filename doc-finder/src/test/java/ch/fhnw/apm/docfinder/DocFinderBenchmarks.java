@@ -39,10 +39,11 @@ public class DocFinderBenchmarks {
         docFinder.setIgnoreCase(ignoreCase);
     }
 
-    @Benchmark
+    // @Benchmark
+    @BenchmarkMode(Mode.Throughput)
     // @BenchmarkMode(Mode.SampleTime)
-    // @Warmup(iterations = 2)
-    // @Measurement(iterations = 3, time = 5)
+    @Warmup(iterations = 2)
+    @Measurement(iterations = 30, time = 2)
     public List<Result> findDocs() throws IOException {
         return docFinder.findDocs(searchText, threads);
     }
